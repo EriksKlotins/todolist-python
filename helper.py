@@ -1,4 +1,5 @@
 import sqlite3
+import random
 
 DB_PATH = './todo.db'
 NOTSTARTED = 'Not Started'
@@ -6,6 +7,9 @@ INPROGRESS = 'In Progress'
 COMPLETED = 'Completed'
 
 def add_to_list(item):
+    if len(item) == 0:
+        print ('Empty items not allowed')
+        return None;
     try:
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
@@ -17,6 +21,20 @@ def add_to_list(item):
         return None
 
 todo_list = {}
+def get_random_task():
+    items = get_all_items()
+    if len(items) > 0:
+        return 'No tasks left'
+    else:
+        return random.choice(items)
+
+
+def get_item_range(first = 0, last = -1):
+    items = get_all_items()
+    return [items[i] if i=0 else items[0] for i in range(first, first + last - 1)]
+
+
+
 
 def get_all_items():
     try:
@@ -26,7 +44,7 @@ def get_all_items():
         rows = c.fetchall()
         return { "count": len(rows), "items": rows }
     except Exception as e:
-        print('Error: ', e)
+ 
         return None
 
 def get_item(item):
